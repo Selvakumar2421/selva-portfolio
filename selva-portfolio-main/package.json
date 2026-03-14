@@ -1,0 +1,23 @@
+{
+  "name": "selva-portfolio",
+  "version": "1.0.0",
+  "description": "Creative Technologist Portfolio - Selvakumar P",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'No build step required'",
+    "start": "echo 'This is a static site deployed on Vercel'"
+  },
+  "dependencies": {
+    "nodemailer": "^8.0.2"
+  },
+  "keywords": [
+    "portfolio",
+    "3d",
+    "ai",
+    "design",
+    "creative",
+    "technologist"
+  ],
+  "author": "Selvakumar P",
+  "license": "MIT"
+}
