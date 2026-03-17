@@ -53,8 +53,16 @@
       background-color: #0a0a0a;
       color: #ffffff;
       overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
     }
     
+    /* promote canvas to own layer to avoid blocking scroll */
+    #hero-background, #contact-background {
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
     .behance-card-shadow {
       transition: transform 0.3s ease;
     }
@@ -72,6 +80,7 @@
     /* Hero image crop — hide stick on mobile, full height on desktop */
     .img-crop-container {
       height: 300px;
+      margin-bottom: -6px;
     }
     .img-crop {
       height: 125%;
@@ -82,9 +91,15 @@
       .img-crop-container {
         height: 100%;
         max-height: none;
+        margin-bottom: 0;
+        /* stretch to fill the absolute container fully */
+        position: absolute;
+        bottom: 0;
+        top: 0;
       }
       .img-crop {
-        height: 92%;
+        height: 100%;
+        width: 100%;
         object-fit: cover;
         object-position: top center;
       }
@@ -127,7 +142,7 @@
 </div>
 <!-- END: Navigation -->
 <!-- BEGIN: Hero Section -->
-<section class="min-h-screen pt-24 px-4 sm:px-6 flex flex-col relative overflow-hidden">
+<section class="pt-24 pb-0 md:pb-0 px-4 sm:px-6 flex flex-col relative overflow-hidden md:min-h-screen">
   <canvas id="hero-background" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"></canvas>
 
   <div class="max-w-7xl mx-auto w-full relative z-10 flex flex-col flex-1">
@@ -136,13 +151,13 @@
       Portfol<span class="text-brand-yellow">io</span>
     </h1>
 
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-0 md:gap-8 mt-4 md:mt-8 relative flex-1">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-0 md:gap-8 mt-2 md:mt-8 relative md:flex-1">
       <!-- Text block -->
-      <div class="text-left w-full md:max-w-lg lg:max-w-xl z-20 pb-8 md:pb-16">
-        <p class="font-light mb-4 leading-tight" style="font-size: clamp(1.1rem, 2.5vw, 2.8rem);">
+      <div class="text-left w-full md:max-w-lg lg:max-w-xl z-20 pb-4 md:pb-16">
+        <p class="font-light mb-3 leading-tight" style="font-size: clamp(1.1rem, 2.5vw, 2.8rem);">
           I'm <span class="font-bold">Selvakumar P</span>, a Creative Technologist specializing in 3D, AI, and Visual Design.
         </p>
-        <p class="text-brand-textGray mb-6" style="font-size: clamp(0.9rem, 1.5vw, 1.25rem);">
+        <p class="text-brand-textGray mb-4" style="font-size: clamp(0.9rem, 1.5vw, 1.25rem);">
           Designing intelligent digital experiences through 3D design, AI-powered interfaces, and immersive visual storytelling.
         </p>
         <div class="flex flex-wrap gap-3">
@@ -151,8 +166,8 @@
         </div>
       </div>
 
-      <!-- Profile Image -->
-      <div class="w-full md:w-auto flex justify-center md:justify-end md:absolute md:right-0 md:top-0 md:bottom-0 mt-auto md:mt-0 items-end">
+      <!-- Profile Image: on mobile sits right after text, on md+ absolutely positioned right -->
+      <div class="w-full md:w-auto flex justify-center md:justify-end md:absolute md:right-0 md:top-0 md:bottom-0 md:mt-0 items-end mt-2">
         <div class="overflow-hidden img-crop-container" style="width: clamp(200px, 35vw, 520px);">
           <img alt="Selvakumar P" class="w-full block img-crop" src="Green  Pink  Vintage Retro Typographic Movie Night Poster.svg"/>
         </div>
@@ -944,7 +959,7 @@ function init() {
     alpha: true
   });
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, window.innerWidth < 768 ? 1 : 2));
   
   const geometry = new THREE.PlaneGeometry(2, 2);
   
@@ -1098,9 +1113,9 @@ function init() {
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
   
-  // Event listeners
+  // Event listeners — passive:true is critical for smooth mobile scroll
   window.addEventListener('mousemove', onMouseMove);
-  window.addEventListener('touchmove', onTouchMove);
+  window.addEventListener('touchmove', onTouchMove, { passive: true });
   window.addEventListener('resize', onWindowResize);
 }
 
@@ -1121,19 +1136,29 @@ function onWindowResize() {
   if (canvas && renderer) {
     renderer.setSize(window.innerWidth, window.innerHeight);
     uniforms.r.value.set(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, window.innerWidth < 768 ? 1 : 2));
+  }
+}
+
+let heroVisible = true;
+// Use IntersectionObserver to pause rendering when hero is off screen
+if (typeof IntersectionObserver !== 'undefined') {
+  const heroSection = document.querySelector('#hero-background');
+  if (heroSection) {
+    new IntersectionObserver((entries) => {
+      heroVisible = entries[0].isIntersecting;
+    }, { threshold: 0 }).observe(heroSection);
   }
 }
 
 function animate() {
   requestAnimationFrame(animate);
-  
+  if (!heroVisible) return;
   if (uniforms && clock) {
     uniforms.t.value = clock.getElapsedTime();
     mouse.lerp(targetMouse, 0.03);
     uniforms.mouse.value.copy(mouse);
   }
-  
   if (renderer && scene && camera) {
     renderer.render(scene, camera);
   }
@@ -1445,7 +1470,7 @@ function initContactBackground() {
   const container = canvas.parentElement;
   const rect = container.getBoundingClientRect();
   contactRenderer.setSize(rect.width, rect.height);
-  contactRenderer.setPixelRatio(window.devicePixelRatio);
+  contactRenderer.setPixelRatio(Math.min(window.devicePixelRatio, window.innerWidth < 768 ? 1 : 2));
   contactUniforms.r.value.set(rect.width, rect.height);
   
   const geometry = new THREE.PlaneGeometry(2, 2);
@@ -1600,9 +1625,9 @@ function initContactBackground() {
   const mesh = new THREE.Mesh(geometry, contactMaterial);
   contactScene.add(mesh);
   
-  // Mouse events for contact form area
+  // passive:true prevents blocking scroll on mobile
   container.addEventListener('mousemove', onContactMouseMove);
-  container.addEventListener('touchmove', onContactTouchMove);
+  container.addEventListener('touchmove', onContactTouchMove, { passive: true });
 }
 
 function onContactMouseMove(event) {
@@ -1631,18 +1656,16 @@ function onContactBackgroundResize() {
   const rect = container.getBoundingClientRect();
   contactRenderer.setSize(rect.width, rect.height);
   contactUniforms.r.value.set(rect.width, rect.height);
-  contactRenderer.setPixelRatio(window.devicePixelRatio);
+  contactRenderer.setPixelRatio(Math.min(window.devicePixelRatio, window.innerWidth < 768 ? 1 : 2));
 }
 
+let contactVisible = false;
 function animateContactBackground() {
   requestAnimationFrame(animateContactBackground);
-  
-  if (!contactRenderer || !contactScene) return;
-  
+  if (!contactRenderer || !contactScene || !contactVisible) return;
   contactUniforms.t.value = contactClock.getElapsedTime();
   contactMouse.lerp(contactTargetMouse, 0.03);
   contactUniforms.mouse.value.copy(contactMouse);
-  
   contactRenderer.render(contactScene, contactCamera);
 }
 
@@ -1651,6 +1674,15 @@ window.addEventListener('load', () => {
   setTimeout(() => {
     initContactBackground();
     animateContactBackground();
+    // Only render contact bg when it's visible
+    const contactCanvas = document.getElementById('contact-background');
+    if (contactCanvas && typeof IntersectionObserver !== 'undefined') {
+      new IntersectionObserver((entries) => {
+        contactVisible = entries[0].isIntersecting;
+      }, { threshold: 0 }).observe(contactCanvas);
+    } else {
+      contactVisible = true;
+    }
   }, 1000);
 });
 
