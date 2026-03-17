@@ -9,6 +9,9 @@
     tailwind.config = {
       theme: {
         extend: {
+          screens: {
+            'xs': '480px',
+          },
           colors: {
             brand: {
               black: '#0a0a0a',
@@ -65,53 +68,97 @@
       background-image: radial-gradient(circle at 2px 2px, #222 1px, transparent 0);
       background-size: 40px 40px;
     }
+
+    /* Hero image crop — hide stick on mobile, full height on desktop */
+    .img-crop-container {
+      height: 300px;
+    }
+    .img-crop {
+      height: 125%;
+      object-fit: cover;
+      object-position: top center;
+    }
+    @media (min-width: 768px) {
+      .img-crop-container {
+        height: 100%;
+        max-height: none;
+      }
+      .img-crop {
+        height: 92%;
+        object-fit: cover;
+        object-position: top center;
+      }
+    }
   </style>
 </head>
 <body class="font-sans antialiased">
 <!-- BEGIN: Navigation -->
-<nav class="fixed top-0 w-full z-50 bg-brand-black/80 backdrop-blur-md border-b border-white/10 px-6 py-4 flex justify-between items-center">
-<div class="text-xl font-extrabold tracking-tighter">SELVAKUMAR P</div>
-<div class="hidden md:flex items-center space-x-8 text-sm font-medium uppercase tracking-widest">
-<a class="hover:text-brand-yellow transition" href="#projects">Projects</a>
-<a class="hover:text-brand-yellow transition" href="#expertise">Expertise</a>
-<a class="hover:text-brand-yellow transition" href="#experience">Experience</a>
-<a class="px-4 py-2 bg-brand-yellow text-black font-bold rounded-sm hover:bg-white transition" href="#contact-form">Hire Me</a>
-</div>
+<nav class="fixed top-0 w-full z-50 bg-brand-black/90 backdrop-blur-md border-b border-white/10 px-6 py-4 flex justify-between items-center">
+  <div class="text-xl font-extrabold tracking-tighter">SELVAKUMAR P</div>
+  <!-- Desktop nav -->
+  <div class="hidden md:flex items-center space-x-8 text-sm font-medium uppercase tracking-widest">
+    <a class="hover:text-brand-yellow transition" href="#projects">Projects</a>
+    <a class="hover:text-brand-yellow transition" href="#expertise">Expertise</a>
+    <a class="hover:text-brand-yellow transition" href="#experience">Experience</a>
+    <a class="px-4 py-2 bg-brand-yellow text-black font-bold rounded-sm hover:bg-white transition" href="#contact-form">Hire Me</a>
+  </div>
+  <!-- Mobile hamburger -->
+  <button id="mobileMenuBtn" class="md:hidden flex flex-col justify-center gap-[5px] w-8 h-8" aria-label="Toggle menu">
+    <span class="block w-6 h-0.5 bg-white transition-all duration-300 origin-center" id="bar1"></span>
+    <span class="block w-6 h-0.5 bg-white transition-all duration-300" id="bar2"></span>
+    <span class="block w-6 h-0.5 bg-white transition-all duration-300 origin-center" id="bar3"></span>
+  </button>
 </nav>
+<!-- Mobile sidebar drawer -->
+<div id="mobileMenuOverlay" class="fixed inset-0 bg-black/60 z-40 hidden" onclick="closeMobileMenu()"></div>
+<div id="mobileMenu" class="fixed top-0 right-0 h-full w-72 bg-brand-black border-l border-white/10 z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+  <!-- Drawer header -->
+  <div class="flex justify-between items-center px-6 py-5 border-b border-white/10">
+    <span class="text-sm font-extrabold tracking-tighter">SELVAKUMAR P</span>
+    <button onclick="closeMobileMenu()" class="text-white hover:text-brand-yellow transition text-2xl leading-none">&times;</button>
+  </div>
+  <!-- Nav links -->
+  <nav class="flex flex-col px-6 pt-8 gap-1 flex-1">
+    <a class="text-lg font-black uppercase tracking-widest py-4 border-b border-white/10 hover:text-brand-yellow transition" href="#projects" onclick="closeMobileMenu()">Projects</a>
+    <a class="text-lg font-black uppercase tracking-widest py-4 border-b border-white/10 hover:text-brand-yellow transition" href="#expertise" onclick="closeMobileMenu()">Expertise</a>
+    <a class="text-lg font-black uppercase tracking-widest py-4 border-b border-white/10 hover:text-brand-yellow transition" href="#experience" onclick="closeMobileMenu()">Experience</a>
+    <a class="mt-6 bg-brand-yellow text-black px-6 py-4 font-black uppercase text-center hover:bg-white transition" href="#contact-form" onclick="closeMobileMenu()">Hire Me</a>
+  </nav>
+</div>
 <!-- END: Navigation -->
 <!-- BEGIN: Hero Section -->
-<section class="min-h-screen pt-32 pb-20 px-6 flex flex-col items-center justify-center relative overflow-hidden">
-<!-- Animated Background Canvas -->
-<canvas id="hero-background" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"></canvas>
+<section class="min-h-screen pt-24 px-4 sm:px-6 flex flex-col relative overflow-hidden">
+  <canvas id="hero-background" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"></canvas>
 
-<div class="max-w-7xl mx-auto w-full relative z-10">
-<h1 class="text-display text-7xl md:text-[11rem] lg:text-[14rem] mb-6 text-left leading-none">
-        Portfol<span class="text-brand-yellow">io</span>
-</h1>
-<div class="flex flex-col lg:flex-row items-start justify-between gap-12 mt-12 relative">
-<div class="text-left max-w-xl z-20">
-<p class="text-2xl md:text-4xl font-light mb-6 leading-tight">
-            I'm <span class="font-bold">Selvakumar P</span>, a Creative Technologist specializing in 3D, AI, and Visual Design.
-          </p>
-<p class="text-brand-textGray text-lg mb-8">
-            Designing intelligent digital experiences through 3D design, AI-powered interfaces, and immersive visual storytelling.
-          </p>
-<div class="flex space-x-4">
-<a class="bg-white text-black px-8 py-4 font-bold uppercase hover:bg-brand-yellow transition" href="#projects">View Projects</a>
-<a class="border border-white px-8 py-4 font-bold uppercase hover:bg-white hover:text-black transition" href="#contact-form">Contact</a>
-</div>
-</div>
-<!-- Large Profile Image -->
-<div class="relative lg:absolute lg:right-0 lg:top-0 lg:bottom-0 flex items-center justify-center">
-<div class="relative">
-<!-- Main large image without circle or tag -->
-<div class="w-80 h-80 md:w-96 md:h-96 lg:w-[500px] lg:h-[500px] xl:w-[600px] xl:h-[600px] relative">
-<img alt="Selvakumar P" class="w-full h-full object-cover object-center" src="Green  Pink  Vintage Retro Typographic Movie Night Poster.svg" style="object-position: center 20%;"/>
-</div>
-</div>
-</div>
-</div>
-</div>
+  <div class="max-w-7xl mx-auto w-full relative z-10 flex flex-col flex-1">
+    <!-- Heading uses vw so it never overflows -->
+    <h1 class="text-display text-left leading-none mb-4 sm:mb-6" style="font-size: clamp(2.8rem, 10vw, 14rem);">
+      Portfol<span class="text-brand-yellow">io</span>
+    </h1>
+
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-0 md:gap-8 mt-4 md:mt-8 relative flex-1">
+      <!-- Text block -->
+      <div class="text-left w-full md:max-w-lg lg:max-w-xl z-20 pb-8 md:pb-16">
+        <p class="font-light mb-4 leading-tight" style="font-size: clamp(1.1rem, 2.5vw, 2.8rem);">
+          I'm <span class="font-bold">Selvakumar P</span>, a Creative Technologist specializing in 3D, AI, and Visual Design.
+        </p>
+        <p class="text-brand-textGray mb-6" style="font-size: clamp(0.9rem, 1.5vw, 1.25rem);">
+          Designing intelligent digital experiences through 3D design, AI-powered interfaces, and immersive visual storytelling.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <a class="bg-white text-black px-6 py-3 font-bold uppercase hover:bg-brand-yellow transition" style="font-size: clamp(0.75rem, 1.2vw, 1.1rem);" href="#projects">View Projects</a>
+          <a class="border border-white px-6 py-3 font-bold uppercase hover:bg-white hover:text-black transition" style="font-size: clamp(0.75rem, 1.2vw, 1.1rem);" href="#contact-form">Contact</a>
+        </div>
+      </div>
+
+      <!-- Profile Image -->
+      <div class="w-full md:w-auto flex justify-center md:justify-end md:absolute md:right-0 md:top-0 md:bottom-0 mt-auto md:mt-0 items-end">
+        <div class="overflow-hidden img-crop-container" style="width: clamp(200px, 35vw, 520px);">
+          <img alt="Selvakumar P" class="w-full block img-crop" src="Green  Pink  Vintage Retro Typographic Movie Night Poster.svg"/>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 <!-- END: Hero Section -->
 <!-- BEGIN: Table of Contents -->
@@ -140,374 +187,353 @@
 </section>
 <!-- END: Table of Contents -->
 <!-- BEGIN: Project Divider -->
-<div class="bg-brand-black py-20 border-y border-white/10 overflow-hidden relative">
-<div class="flex whitespace-nowrap animate-pulse">
-<span class="text-display text-8xl md:text-[12rem] opacity-20 mr-20">FEATURED PROJECTS</span>
-<span class="text-display text-8xl md:text-[12rem] opacity-20 mr-20">FEATURED PROJECTS</span>
-</div>
-<div class="absolute inset-0 flex items-center justify-center">
-<h2 class="text-display text-5xl md:text-8xl text-brand-yellow z-10">SELECTED WORKS</h2>
-</div>
+<div class="bg-brand-black py-12 sm:py-20 border-y border-white/10 overflow-hidden relative">
+  <div class="flex whitespace-nowrap animate-pulse">
+    <span class="text-display text-6xl sm:text-8xl md:text-[12rem] opacity-20 mr-12 sm:mr-20">FEATURED PROJECTS</span>
+    <span class="text-display text-6xl sm:text-8xl md:text-[12rem] opacity-20 mr-12 sm:mr-20">FEATURED PROJECTS</span>
+  </div>
+  <div class="absolute inset-0 flex items-center justify-center">
+    <h2 class="text-display text-3xl sm:text-5xl md:text-8xl text-brand-yellow z-10 text-center px-4">SELECTED WORKS</h2>
+  </div>
 </div>
 <!-- END: Project Divider -->
 <!-- BEGIN: Projects Grid -->
-<section class="py-24 px-6 max-w-7xl mx-auto" id="projects">
-<div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-24">
-<!-- Project 1 -->
-<div class="behance-card-shadow flex flex-col">
-<div class="aspect-video bg-brand-gray mb-8 overflow-hidden relative group">
-<img alt="Meta Quest Virtual Meeting Room" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="vr-image.svg"/>
-<div class="absolute top-4 left-4 bg-brand-yellow text-black px-3 py-1 text-xs font-bold uppercase">Immersive VR</div>
-</div>
-<h3 class="text-3xl font-black uppercase mb-4">Meta Quest Virtual Meeting Room</h3>
-<p class="text-brand-textGray mb-6">VR environment for Meta Quest, Unity development, and detailed 3D Modeling.</p>
-<div class="flex flex-wrap gap-2">
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Unity</span>
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Meta Quest</span>
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Blender</span>
-</div>
-</div>
-<!-- Project 2 -->
-<div class="behance-card-shadow flex flex-col md:mt-24">
-<div class="aspect-video bg-brand-gray mb-8 overflow-hidden relative group">
-<a href="https://e-ielts.sasthra.in/" target="_blank" class="block w-full h-full relative">
-<img alt="IELTSGenAI Platform" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="Ielts-img.svg"/>
-<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-<div class="bg-brand-yellow text-black p-3 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-</svg>
-</div>
-</div>
-</a>
-<div class="absolute top-4 left-4 bg-brand-yellow text-black px-3 py-1 text-xs font-bold uppercase">AI Education</div>
-</div>
-<h3 class="text-3xl font-black uppercase mb-4">IELTSGenAI Platform</h3>
-<p class="text-brand-textGray mb-6">AI-driven learning platform, visual interface design, and global marketing creatives.</p>
-<div class="flex flex-wrap gap-2">
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">AI Logic</span>
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">UI Design</span>
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Growth</span>
-</div>
-</div>
-<!-- Project 3 -->
-<div class="behance-card-shadow flex flex-col">
-<div class="aspect-video bg-brand-gray mb-8 overflow-hidden relative group">
-<a href="https://intervu.sasthra.in/" target="_blank" class="block w-full h-full relative">
-<img alt="Intervu AI Preparation" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="Screenshot 2026-03-11 113402 (1).png"/>
-<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-<div class="bg-brand-yellow text-black p-3 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-</svg>
-</div>
-</div>
-</a>
-<div class="absolute top-4 left-4 bg-brand-yellow text-black px-3 py-1 text-xs font-bold uppercase">Career Tech</div>
-</div>
-<h3 class="text-3xl font-black uppercase mb-4">Intervu – AI Preparation</h3>
-<p class="text-brand-textGray mb-6">AI-powered career prep, product branding, and end-to-end UI & UX design.</p>
-<div class="flex flex-wrap gap-2">
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Branding</span>
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Product Design</span>
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">UI & UX Design</span>
-
-</div>
-</div>
-
-<!-- Project 5 - 3D Girl -->
-<div class="behance-card-shadow flex flex-col">
-<div class="aspect-video bg-brand-gray mb-8 overflow-hidden relative group cursor-pointer" onclick="openGallery('girl')">
-<img alt="3D Girl Character" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="girl/5.svg"/>
-<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-<div class="bg-brand-yellow text-black p-3 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-</svg>
-</div>
-</div>
-<div class="absolute top-4 left-4 bg-brand-yellow text-black px-3 py-1 text-xs font-bold uppercase">3D Character</div>
-</div>
-<h3 class="text-3xl font-black uppercase mb-4">3D Girl Character</h3>
-<p class="text-brand-textGray mb-6">Detailed 3D character modeling with realistic features and expressions using advanced sculpting techniques.</p>
-<div class="flex flex-wrap gap-2">
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Blender</span>
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Character Design</span>
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">3D Modeling</span>
-</div>
-</div>
-<!-- Project 6 - 3D Gun -->
-<div class="behance-card-shadow flex flex-col md:mt-24">
-<div class="aspect-video bg-brand-gray mb-8 overflow-hidden relative group cursor-pointer" onclick="openGallery('gun')">
-<img alt="3D Gun Model" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="gun/1.svg"/>
-<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-<div class="bg-brand-yellow text-black p-3 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-</svg>
-</div>
-</div>
-<div class="absolute top-4 left-4 bg-brand-yellow text-black px-3 py-1 text-xs font-bold uppercase">3D Weapon</div>
-</div>
-<h3 class="text-3xl font-black uppercase mb-4">3D Gun Model</h3>
-<p class="text-brand-textGray mb-6">High-detail weapon modeling with realistic textures and mechanical precision for gaming and visualization.</p>
-<div class="flex flex-wrap gap-2">
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Blender</span>
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Hard Surface</span>
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Game Assets</span>
-</div>
-</div>
-<!-- Project 7 - 3D Camera -->
-<div class="behance-card-shadow flex flex-col">
-<div class="aspect-video bg-brand-gray mb-8 overflow-hidden relative group cursor-pointer" onclick="openGallery('camera')">
-<img alt="3D Camera Model" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="camera/12.svg"/>
-<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-<div class="bg-brand-yellow text-black p-3 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-</svg>
-</div>
-</div>
-<div class="absolute top-4 left-4 bg-brand-yellow text-black px-3 py-1 text-xs font-bold uppercase">3D Product</div>
-</div>
-<h3 class="text-3xl font-black uppercase mb-4">3D Camera Model</h3>
-<p class="text-brand-textGray mb-6">Professional camera modeling with intricate details, realistic materials and precise mechanical components.</p>
-<div class="flex flex-wrap gap-2">
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Blender</span>
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Product Design</span>
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Photorealism</span>
-</div>
-</div>
-<!-- Project 8 - Logo Design -->
-<div class="behance-card-shadow flex flex-col md:mt-24">
-<div class="aspect-video bg-brand-gray mb-8 overflow-hidden relative group cursor-pointer" onclick="openGallery('logos')">
-<img alt="Logo Design Collection" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="logos/47.svg"/>
-<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-<div class="bg-brand-yellow text-black p-3 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-</svg>
-</div>
-</div>
-<div class="absolute top-4 left-4 bg-brand-yellow text-black px-3 py-1 text-xs font-bold uppercase">Brand Identity</div>
-</div>
-<h3 class="text-3xl font-black uppercase mb-4">Logo Design Collection</h3>
-<p class="text-brand-textGray mb-6">Creative brand identity designs featuring modern typography, symbolic elements and versatile visual concepts.</p>
-<div class="flex flex-wrap gap-2">
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Adobe Illustrator</span>
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Brand Identity</span>
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Typography</span>
-</div>
-</div>
-<!-- Project 9 - Brochure Design -->
-<div class="behance-card-shadow flex flex-col">
-<div class="aspect-video bg-brand-gray mb-8 overflow-hidden relative group cursor-pointer" onclick="openPDFGallery('brochures')">
-<img alt="Brochure & Printable Design" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="broucher/broucher-preview.png"/>
-<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-<div class="bg-brand-yellow text-black p-3 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-</svg>
-</div>
-</div>
-<div class="absolute top-4 left-4 bg-brand-yellow text-black px-3 py-1 text-xs font-bold uppercase">Print Design</div>
-</div>
-<h3 class="text-3xl font-black uppercase mb-4">Brochure & Printable Design</h3>
-<p class="text-brand-textGray mb-6">Professional brochure designs and printable materials featuring clean layouts, engaging visuals and effective communication.</p>
-<div class="flex flex-wrap gap-2">
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Adobe InDesign</span>
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Print Design</span>
-<span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Layout</span>
-</div>
-</div>
-</div>
+<section class="py-16 sm:py-24 px-4 sm:px-6 max-w-7xl mx-auto" id="projects">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 lg:gap-x-16 gap-y-16 sm:gap-y-24">
+    <!-- Project 1 -->
+    <div class="behance-card-shadow flex flex-col">
+      <div class="aspect-video bg-brand-gray mb-6 sm:mb-8 overflow-hidden relative group">
+        <img alt="Meta Quest Virtual Meeting Room" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="vr-image.svg"/>
+        <div class="absolute top-4 left-4 bg-brand-yellow text-black px-3 py-1 text-xs font-bold uppercase">Immersive VR</div>
+      </div>
+      <h3 class="text-2xl sm:text-3xl font-black uppercase mb-3 sm:mb-4">Meta Quest Virtual Meeting Room</h3>
+      <p class="text-brand-textGray mb-4 sm:mb-6 text-sm sm:text-base">VR environment for Meta Quest, Unity development, and detailed 3D Modeling.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Unity</span>
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Meta Quest</span>
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Blender</span>
+      </div>
+    </div>
+    <!-- Project 2 -->
+    <div class="behance-card-shadow flex flex-col md:mt-16 lg:mt-24">
+      <div class="aspect-video bg-brand-gray mb-6 sm:mb-8 overflow-hidden relative group">
+        <a href="https://e-ielts.sasthra.in/" target="_blank" class="block w-full h-full relative">
+          <img alt="IELTSGenAI Platform" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="Ielts-img.svg"/>
+          <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+            <div class="bg-brand-yellow text-black p-3 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </div>
+          </div>
+        </a>
+        <div class="absolute top-4 left-4 bg-brand-yellow text-black px-3 py-1 text-xs font-bold uppercase">AI Education</div>
+      </div>
+      <h3 class="text-2xl sm:text-3xl font-black uppercase mb-3 sm:mb-4">IELTSGenAI Platform</h3>
+      <p class="text-brand-textGray mb-4 sm:mb-6 text-sm sm:text-base">AI-driven learning platform, visual interface design, and global marketing creatives.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">AI Logic</span>
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">UI Design</span>
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Growth</span>
+      </div>
+    </div>
+    <!-- Project 3 -->
+    <div class="behance-card-shadow flex flex-col">
+      <div class="aspect-video bg-brand-gray mb-6 sm:mb-8 overflow-hidden relative group">
+        <a href="https://intervu.sasthra.in/" target="_blank" class="block w-full h-full relative">
+          <img alt="Intervu AI Preparation" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="Screenshot 2026-03-11 113402 (1).png"/>
+          <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+            <div class="bg-brand-yellow text-black p-3 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </div>
+          </div>
+        </a>
+        <div class="absolute top-4 left-4 bg-brand-yellow text-black px-3 py-1 text-xs font-bold uppercase">Career Tech</div>
+      </div>
+      <h3 class="text-2xl sm:text-3xl font-black uppercase mb-3 sm:mb-4">Intervu – AI Preparation</h3>
+      <p class="text-brand-textGray mb-4 sm:mb-6 text-sm sm:text-base">AI-powered career prep, product branding, and end-to-end UI & UX design.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Branding</span>
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Product Design</span>
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">UI & UX Design</span>
+      </div>
+    </div>
+    <!-- Project 4 - 3D Girl -->
+    <div class="behance-card-shadow flex flex-col md:mt-16 lg:mt-24">
+      <div class="aspect-video bg-brand-gray mb-6 sm:mb-8 overflow-hidden relative group cursor-pointer" onclick="openGallery('girl')">
+        <img alt="3D Girl Character" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="girl/5.svg"/>
+        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+          <div class="bg-brand-yellow text-black p-3 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          </div>
+        </div>
+        <div class="absolute top-4 left-4 bg-brand-yellow text-black px-3 py-1 text-xs font-bold uppercase">3D Character</div>
+      </div>
+      <h3 class="text-2xl sm:text-3xl font-black uppercase mb-3 sm:mb-4">3D Girl Character</h3>
+      <p class="text-brand-textGray mb-4 sm:mb-6 text-sm sm:text-base">Detailed 3D character modeling with realistic features and expressions using advanced sculpting techniques.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Blender</span>
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Character Design</span>
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">3D Modeling</span>
+      </div>
+    </div>
+    <!-- Project 5 - 3D Gun -->
+    <div class="behance-card-shadow flex flex-col">
+      <div class="aspect-video bg-brand-gray mb-6 sm:mb-8 overflow-hidden relative group cursor-pointer" onclick="openGallery('gun')">
+        <img alt="3D Gun Model" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="gun/1.svg"/>
+        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+          <div class="bg-brand-yellow text-black p-3 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          </div>
+        </div>
+        <div class="absolute top-4 left-4 bg-brand-yellow text-black px-3 py-1 text-xs font-bold uppercase">3D Weapon</div>
+      </div>
+      <h3 class="text-2xl sm:text-3xl font-black uppercase mb-3 sm:mb-4">3D Gun Model</h3>
+      <p class="text-brand-textGray mb-4 sm:mb-6 text-sm sm:text-base">High-detail weapon modeling with realistic textures and mechanical precision for gaming and visualization.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Blender</span>
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Hard Surface</span>
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Game Assets</span>
+      </div>
+    </div>
+    <!-- Project 6 - 3D Camera -->
+    <div class="behance-card-shadow flex flex-col md:mt-16 lg:mt-24">
+      <div class="aspect-video bg-brand-gray mb-6 sm:mb-8 overflow-hidden relative group cursor-pointer" onclick="openGallery('camera')">
+        <img alt="3D Camera Model" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="camera/12.svg"/>
+        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+          <div class="bg-brand-yellow text-black p-3 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          </div>
+        </div>
+        <div class="absolute top-4 left-4 bg-brand-yellow text-black px-3 py-1 text-xs font-bold uppercase">3D Product</div>
+      </div>
+      <h3 class="text-2xl sm:text-3xl font-black uppercase mb-3 sm:mb-4">3D Camera Model</h3>
+      <p class="text-brand-textGray mb-4 sm:mb-6 text-sm sm:text-base">Professional camera modeling with intricate details, realistic materials and precise mechanical components.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Blender</span>
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Product Design</span>
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Photorealism</span>
+      </div>
+    </div>
+    <!-- Project 7 - Logo Design -->
+    <div class="behance-card-shadow flex flex-col">
+      <div class="aspect-video bg-brand-gray mb-6 sm:mb-8 overflow-hidden relative group cursor-pointer" onclick="openGallery('logos')">
+        <img alt="Logo Design Collection" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="logos/47.svg"/>
+        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+          <div class="bg-brand-yellow text-black p-3 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          </div>
+        </div>
+        <div class="absolute top-4 left-4 bg-brand-yellow text-black px-3 py-1 text-xs font-bold uppercase">Brand Identity</div>
+      </div>
+      <h3 class="text-2xl sm:text-3xl font-black uppercase mb-3 sm:mb-4">Logo Design Collection</h3>
+      <p class="text-brand-textGray mb-4 sm:mb-6 text-sm sm:text-base">Creative brand identity designs featuring modern typography, symbolic elements and versatile visual concepts.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Adobe Illustrator</span>
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Brand Identity</span>
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Typography</span>
+      </div>
+    </div>
+    <!-- Project 8 - Brochure Design -->
+    <div class="behance-card-shadow flex flex-col md:mt-16 lg:mt-24">
+      <div class="aspect-video bg-brand-gray mb-6 sm:mb-8 overflow-hidden relative group cursor-pointer" onclick="openPDFGallery('brochures')">
+        <img alt="Brochure & Printable Design" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="broucher/broucher-preview.png"/>
+        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+          <div class="bg-brand-yellow text-black p-3 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          </div>
+        </div>
+        <div class="absolute top-4 left-4 bg-brand-yellow text-black px-3 py-1 text-xs font-bold uppercase">Print Design</div>
+      </div>
+      <h3 class="text-2xl sm:text-3xl font-black uppercase mb-3 sm:mb-4">Brochure & Printable Design</h3>
+      <p class="text-brand-textGray mb-4 sm:mb-6 text-sm sm:text-base">Professional brochure designs and printable materials featuring clean layouts, engaging visuals and effective communication.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Adobe InDesign</span>
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Print Design</span>
+        <span class="border border-white/20 px-3 py-1 text-[10px] uppercase font-bold tracking-widest">Layout</span>
+      </div>
+    </div>
+  </div>
 </section>
 <!-- END: Projects Grid -->
 <!-- BEGIN: Expertise Section -->
-<section class="bg-white text-black py-24 px-6 border-y-8 border-brand-yellow" id="expertise">
-<div class="max-w-6xl mx-auto">
-<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
-<div class="max-w-2xl">
-<h2 class="text-display text-6xl md:text-8xl mb-6">Expertise</h2>
-<p class="text-xl font-bold uppercase tracking-tight">Bridging the gap between the virtual and the physical.</p>
-</div>
-<div class="text-xs font-black tracking-widest opacity-30 text-right">02 / CORE STRENGTHS</div>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-<div class="p-8 border-l-2 border-black">
-<div class="w-12 h-12 bg-black text-white flex items-center justify-center mb-6">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-</div>
-<h3 class="text-2xl font-black uppercase mb-4">3D &amp; Immersive Design</h3>
-<p class="text-gray-600 leading-relaxed">Crafting high-fidelity virtual environments and spatial experiences using Blender, Unity, and Unreal Engine. Focused on VR/AR interactivity.</p>
-</div>
-<div class="p-8 border-l-2 border-black">
-<div class="w-12 h-12 bg-black text-white flex items-center justify-center mb-6">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-</div>
-<h3 class="text-2xl font-black uppercase mb-4">AI &amp; Interactive Interfaces</h3>
-<p class="text-gray-600 leading-relaxed">Integrating LLMs and generative AI into intuitive user interfaces. Designing systems that learn and adapt to human behavior.</p>
-</div>
-<div class="p-8 border-l-2 border-black">
-<div class="w-12 h-12 bg-black text-white flex items-center justify-center mb-6">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-</div>
-<h3 class="text-2xl font-black uppercase mb-4">Product &amp; Visual Design</h3>
-<p class="text-gray-600 leading-relaxed">Full-cycle product design from conceptual branding to high-conversion visual marketing creatives and design systems.</p>
-</div>
-</div>
-</div>
+<section class="bg-white text-black py-16 sm:py-24 px-4 sm:px-6 border-y-8 border-brand-yellow" id="expertise">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 sm:mb-16 gap-6">
+      <div class="max-w-2xl">
+        <h2 class="text-display text-5xl sm:text-6xl md:text-8xl mb-4 sm:mb-6">Expertise</h2>
+        <p class="text-lg sm:text-xl font-bold uppercase tracking-tight">Bridging the gap between the virtual and the physical.</p>
+      </div>
+      <div class="text-xs font-black tracking-widest opacity-30 md:text-right">02 / CORE STRENGTHS</div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-12">
+      <div class="p-6 sm:p-8 border-l-2 border-black">
+        <div class="w-12 h-12 bg-black text-white flex items-center justify-center mb-6">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+        </div>
+        <h3 class="text-xl sm:text-2xl font-black uppercase mb-4">3D &amp; Immersive Design</h3>
+        <p class="text-gray-600 leading-relaxed text-sm sm:text-base">Crafting high-fidelity virtual environments and spatial experiences using Blender, Unity, and Unreal Engine. Focused on VR/AR interactivity.</p>
+      </div>
+      <div class="p-6 sm:p-8 border-l-2 border-black">
+        <div class="w-12 h-12 bg-black text-white flex items-center justify-center mb-6">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+        </div>
+        <h3 class="text-xl sm:text-2xl font-black uppercase mb-4">AI &amp; Interactive Interfaces</h3>
+        <p class="text-gray-600 leading-relaxed text-sm sm:text-base">Integrating LLMs and generative AI into intuitive user interfaces. Designing systems that learn and adapt to human behavior.</p>
+      </div>
+      <div class="p-6 sm:p-8 border-l-2 border-black">
+        <div class="w-12 h-12 bg-black text-white flex items-center justify-center mb-6">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+        </div>
+        <h3 class="text-xl sm:text-2xl font-black uppercase mb-4">Product &amp; Visual Design</h3>
+        <p class="text-gray-600 leading-relaxed text-sm sm:text-base">Full-cycle product design from conceptual branding to high-conversion visual marketing creatives and design systems.</p>
+      </div>
+    </div>
+  </div>
 </section>
 <!-- END: Expertise Section -->
 <!-- BEGIN: Tools & Tech -->
-<section class="py-24 px-6 bg-brand-black grid-bg">
-<div class="max-w-6xl mx-auto">
-<h2 class="text-display text-4xl mb-16 outline-text uppercase">Tools &amp; Technologies</h2>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-16">
-<div>
-<h4 class="text-brand-yellow font-bold uppercase mb-8 border-b border-brand-yellow/30 pb-2">3D &amp; Engine</h4>
-<ul class="space-y-4 text-xl font-light">
-<li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow"></span> Blender</li>
-<li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow"></span> Unity 3D</li>
-<li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow"></span> Unreal Engine</li>
-<li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow"></span> Maya Autodesk</li>
-</ul>
-</div>
-<div>
-<h4 class="text-brand-yellow font-bold uppercase mb-8 border-b border-brand-yellow/30 pb-2">Design Stack</h4>
-<ul class="space-y-4 text-xl font-light">
-<li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow"></span> Figma</li>
-<li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow"></span> Adobe Photoshop</li>
-<li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow"></span> Adobe Illustrator</li>
-<li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow"></span> Canva</li>
-</ul>
-</div>
-<div>
-<h4 class="text-brand-yellow font-bold uppercase mb-8 border-b border-brand-yellow/30 pb-2">Development</h4>
-<ul class="space-y-4 text-xl font-light">
-<li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow"></span> React Three Fiber</li>
-<li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow"></span> Meta SDK</li>
-<li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow"></span> AI Content Generation</li>
-<li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow"></span> AR/VR Development</li>
-</ul>
-</div>
-</div>
-</div>
+<section class="py-16 sm:py-24 px-4 sm:px-6 bg-brand-black grid-bg">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-display text-3xl sm:text-4xl mb-10 sm:mb-16 outline-text uppercase">Tools &amp; Technologies</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 sm:gap-16">
+      <div>
+        <h4 class="text-brand-yellow font-bold uppercase mb-6 sm:mb-8 border-b border-brand-yellow/30 pb-2">3D &amp; Engine</h4>
+        <ul class="space-y-4 text-lg sm:text-xl font-light">
+          <li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow flex-shrink-0"></span> Blender</li>
+          <li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow flex-shrink-0"></span> Unity 3D</li>
+          <li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow flex-shrink-0"></span> Unreal Engine</li>
+          <li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow flex-shrink-0"></span> Maya Autodesk</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-brand-yellow font-bold uppercase mb-6 sm:mb-8 border-b border-brand-yellow/30 pb-2">Design Stack</h4>
+        <ul class="space-y-4 text-lg sm:text-xl font-light">
+          <li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow flex-shrink-0"></span> Figma</li>
+          <li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow flex-shrink-0"></span> Adobe Photoshop</li>
+          <li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow flex-shrink-0"></span> Adobe Illustrator</li>
+          <li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow flex-shrink-0"></span> Canva</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-brand-yellow font-bold uppercase mb-6 sm:mb-8 border-b border-brand-yellow/30 pb-2">Development</h4>
+        <ul class="space-y-4 text-lg sm:text-xl font-light">
+          <li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow flex-shrink-0"></span> React Three Fiber</li>
+          <li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow flex-shrink-0"></span> Meta SDK</li>
+          <li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow flex-shrink-0"></span> AI Content Generation</li>
+          <li class="flex items-center gap-3"><span class="w-2 h-2 bg-brand-yellow flex-shrink-0"></span> AR/VR Development</li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </section>
 <!-- END: Tools & Tech -->
 <!-- BEGIN: Experience & Education -->
-<section class="py-24 px-6 bg-white text-black" id="experience">
-<div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-24">
-<!-- Experience -->
-<div>
-<div class="flex items-center gap-4 mb-12">
-<div class="p-3 bg-black text-white">
-<svg class="w-6 h-6" fill="currentColor" viewbox="0 0 20 20"><path d="M9 2a1 1 0 000 2h2a1 1 0 000-2H9z"></path><path clip-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" fill-rule="evenodd"></path></svg>
-</div>
-<h2 class="text-4xl font-black uppercase">Experience</h2>
-</div>
-<div class="relative pl-8 border-l-2 border-black space-y-12">
-<div class="relative">
-<div class="absolute -left-[41px] top-0 w-4 h-4 rounded-full bg-brand-yellow border-2 border-black"></div>
-<span class="text-xs font-black text-gray-400 uppercase tracking-widest">2024 — 2026</span>
-<h3 class="text-2xl font-black uppercase mt-1">Creative Lead</h3>
-<p class="font-bold text-gray-500 mb-4">Dataspark AI Solutions</p>
-<p class="text-gray-600">Leading creative direction for AI-driven products, immersive marketing, and visual storytelling strategies.</p>
-</div>
-</div>
-</div>
-<!-- Education -->
-<div>
-<div class="flex items-center gap-4 mb-12">
-<div class="p-3 bg-black text-white">
-<svg class="w-6 h-6" fill="currentColor" viewbox="0 0 20 20"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.242 3.632 1 1 0 01-.89.89 8.968 8.968 0 00-6.734 3.652 1 1 0 01-1.63 0z"></path></svg>
-</div>
-<h2 class="text-4xl font-black uppercase">Education</h2>
-</div>
-<div class="relative pl-8 border-l-2 border-black space-y-12">
-<div class="relative">
-<div class="absolute -left-[41px] top-0 w-4 h-4 rounded-full bg-brand-yellow border-2 border-black"></div>
-<span class="text-xs font-black text-gray-400 uppercase tracking-widest">Graduated 2024</span>
-<h3 class="text-2xl font-black uppercase mt-1">BE Computer Science</h3>
-<p class="font-bold text-gray-500 mb-4">Apollo Engineering College</p>
-<p class="text-gray-600">Focused on Human-Computer Interaction, 3D Graphics, and Artificial Intelligence.</p>
-</div>
-</div>
-</div>
-<!-- Certifications -->
-<div>
-<div class="flex items-center gap-4 mb-12">
-<div class="p-3 bg-black text-white">
-<svg class="w-6 h-6" fill="currentColor" viewbox="0 0 20 20"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-</div>
-<h2 class="text-4xl font-black uppercase">Certifications</h2>
-</div>
-<div class="relative pl-8 border-l-2 border-black space-y-12">
-<div class="relative">
-<div class="absolute -left-[41px] top-0 w-4 h-4 rounded-full bg-brand-yellow border-2 border-black"></div>
-<span class="text-xs font-black text-gray-400 uppercase tracking-widest">Mar 2025</span>
-<h3 class="text-2xl font-black uppercase mt-1">3D Animation & Multimedia</h3>
-<p class="font-bold text-gray-500 mb-4">PUMO Technovations, Chennai</p>
-<p class="text-gray-600">Advanced training in 3D animation techniques and multimedia production workflows.</p>
-</div>
-<div class="relative">
-<div class="absolute -left-[41px] top-0 w-4 h-4 rounded-full bg-brand-yellow border-2 border-black"></div>
-<span class="text-xs font-black text-gray-400 uppercase tracking-widest">Dec 2023</span>
-<h3 class="text-2xl font-black uppercase mt-1">AR/VR Development</h3>
-<p class="font-bold text-gray-500 mb-4">Naan Mudhalvan Government Program</p>
-<p class="text-gray-600">Comprehensive certification in augmented and virtual reality development technologies.</p>
-</div>
-</div>
-</div>
-</div>
+<section class="py-16 sm:py-24 px-4 sm:px-6 bg-white text-black" id="experience">
+  <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 sm:gap-16 lg:gap-24">
+    <!-- Experience -->
+    <div>
+      <div class="flex items-center gap-4 mb-8 sm:mb-12">
+        <div class="p-3 bg-black text-white flex-shrink-0">
+          <svg class="w-6 h-6" fill="currentColor" viewbox="0 0 20 20"><path d="M9 2a1 1 0 000 2h2a1 1 0 000-2H9z"></path><path clip-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" fill-rule="evenodd"></path></svg>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-black uppercase">Experience</h2>
+      </div>
+      <div class="relative pl-8 border-l-2 border-black space-y-12">
+        <div class="relative">
+          <div class="absolute -left-[41px] top-0 w-4 h-4 rounded-full bg-brand-yellow border-2 border-black"></div>
+          <span class="text-xs font-black text-gray-400 uppercase tracking-widest">2024 — 2026</span>
+          <h3 class="text-xl sm:text-2xl font-black uppercase mt-1">Creative Lead</h3>
+          <p class="font-bold text-gray-500 mb-4">Dataspark AI Solutions</p>
+          <p class="text-gray-600 text-sm sm:text-base">Leading creative direction for AI-driven products, immersive marketing, and visual storytelling strategies.</p>
+        </div>
+      </div>
+    </div>
+    <!-- Education -->
+    <div>
+      <div class="flex items-center gap-4 mb-8 sm:mb-12">
+        <div class="p-3 bg-black text-white flex-shrink-0">
+          <svg class="w-6 h-6" fill="currentColor" viewbox="0 0 20 20"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.242 3.632 1 1 0 01-.89.89 8.968 8.968 0 00-6.734 3.652 1 1 0 01-1.63 0z"></path></svg>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-black uppercase">Education</h2>
+      </div>
+      <div class="relative pl-8 border-l-2 border-black space-y-12">
+        <div class="relative">
+          <div class="absolute -left-[41px] top-0 w-4 h-4 rounded-full bg-brand-yellow border-2 border-black"></div>
+          <span class="text-xs font-black text-gray-400 uppercase tracking-widest">Graduated 2024</span>
+          <h3 class="text-xl sm:text-2xl font-black uppercase mt-1">BE Computer Science</h3>
+          <p class="font-bold text-gray-500 mb-4">Apollo Engineering College</p>
+          <p class="text-gray-600 text-sm sm:text-base">Focused on Human-Computer Interaction, 3D Graphics, and Artificial Intelligence.</p>
+        </div>
+      </div>
+    </div>
+    <!-- Certifications -->
+    <div>
+      <div class="flex items-center gap-4 mb-8 sm:mb-12">
+        <div class="p-3 bg-black text-white flex-shrink-0">
+          <svg class="w-6 h-6" fill="currentColor" viewbox="0 0 20 20"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-black uppercase">Certifications</h2>
+      </div>
+      <div class="relative pl-8 border-l-2 border-black space-y-12">
+        <div class="relative">
+          <div class="absolute -left-[41px] top-0 w-4 h-4 rounded-full bg-brand-yellow border-2 border-black"></div>
+          <span class="text-xs font-black text-gray-400 uppercase tracking-widest">Mar 2025</span>
+          <h3 class="text-xl sm:text-2xl font-black uppercase mt-1">3D Animation & Multimedia</h3>
+          <p class="font-bold text-gray-500 mb-4">PUMO Technovations, Chennai</p>
+          <p class="text-gray-600 text-sm sm:text-base">Advanced training in 3D animation techniques and multimedia production workflows.</p>
+        </div>
+        <div class="relative">
+          <div class="absolute -left-[41px] top-0 w-4 h-4 rounded-full bg-brand-yellow border-2 border-black"></div>
+          <span class="text-xs font-black text-gray-400 uppercase tracking-widest">Dec 2023</span>
+          <h3 class="text-xl sm:text-2xl font-black uppercase mt-1">AR/VR Development</h3>
+          <p class="font-bold text-gray-500 mb-4">Naan Mudhalvan Government Program</p>
+          <p class="text-gray-600 text-sm sm:text-base">Comprehensive certification in augmented and virtual reality development technologies.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 <!-- END: Experience & Education -->
 <!-- BEGIN: CTA Section -->
-<section class="py-32 px-6 bg-brand-black text-center relative overflow-hidden" id="contact">
+<section class="py-20 sm:py-32 px-4 sm:px-6 bg-brand-black text-center relative overflow-hidden" id="contact">
 <div class="max-w-4xl mx-auto relative z-10">
-<h2 class="text-display text-5xl md:text-8xl mb-8 leading-none">
+<h2 class="text-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl mb-6 sm:mb-8 leading-none">
         Let’s build the future of <br/>
 <span class="text-brand-yellow">digital experiences.</span>
 </h2>
-<p class="text-xl text-brand-textGray mb-12">
+<p class="text-base sm:text-xl text-brand-textGray mb-8 sm:mb-12">
         Interested in collaborating on AI products, immersive design, or creative technology projects? My door is always open.
       </p>
-<div class="flex flex-col items-center gap-6">
-<a class="text-2xl md:text-4xl font-black hover:text-brand-yellow transition break-all" href="mailto:selvakumar0954@gmail.com">
+<div class="flex flex-col items-center gap-4 sm:gap-6">
+<a class="text-lg sm:text-2xl md:text-4xl font-black hover:text-brand-yellow transition break-all px-4" href="mailto:selvakumar0954@gmail.com">
           selvakumar0954@gmail.com
         </a>
 <a class="text-sm font-bold uppercase tracking-widest text-gray-500 hover:text-white transition" href="https://linkedin.com/in/selva-kumar-b7b460343" target="_blank">
           LINKEDIN.COM/IN/SELVA-KUMAR
         </a>
-<a class="mt-8 bg-brand-yellow text-black px-12 py-5 font-black uppercase text-xl hover:scale-105 transition transform" href="#contact-form">
+<a class="mt-4 sm:mt-8 bg-brand-yellow text-black px-8 sm:px-12 py-4 sm:py-5 font-black uppercase text-lg sm:text-xl hover:scale-105 transition transform" href="#contact-form">
           Get In Touch
         </a>
 </div>
 </div>
 <!-- Large background watermark -->
-<div class="absolute -bottom-20 -right-20 text-display text-[20rem] opacity-5 pointer-events-none select-none">
+<div class="absolute -bottom-20 -right-20 text-display text-[10rem] sm:text-[20rem] opacity-5 pointer-events-none select-none">
       SELVA
     </div>
 </section>
 <!-- END: CTA Section -->
 
 <!-- BEGIN: Contact Form Section -->
-<section class="py-24 px-6 bg-brand-gray border-t border-white/10 relative overflow-hidden" id="contact-form">
+<section class="py-16 sm:py-24 px-4 sm:px-6 bg-brand-gray border-t border-white/10 relative overflow-hidden" id="contact-form">
 <!-- Contact Form Background Canvas (same as hero) -->
 <canvas id="contact-background" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"></canvas>
 
 <div class="max-w-4xl mx-auto relative z-10">
-<div class="text-center mb-16">
-<h2 class="text-display text-4xl md:text-6xl mb-6">Get In <span class="text-brand-yellow">Touch</span></h2>
+<div class="text-center mb-10 sm:mb-16">
+<h2 class="text-display text-3xl sm:text-4xl md:text-6xl mb-4 sm:mb-6">Get In <span class="text-brand-yellow">Touch</span></h2>
 <p class="text-brand-textGray text-lg">Ready to collaborate? Fill out the form below and let's create something amazing together.</p>
 </div>
 
-<form class="grid grid-cols-1 md:grid-cols-2 gap-8" id="contactForm" action="/api/contact" method="POST">
+<form class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-8" id="contactForm" action="/api/contact" method="POST">
 <!-- Name Field -->
 <div class="space-y-2">
 <label class="block text-sm font-black uppercase tracking-widest text-brand-yellow" for="name">Name *</label>
@@ -594,23 +620,22 @@
 <!-- END: Contact Form Section -->
 
 <!-- Image Gallery Modal -->
-<div id="galleryModal" class="fixed inset-0 bg-black bg-opacity-95 z-50 hidden flex items-center justify-center p-4">
-<div class="max-w-4xl mx-auto relative w-full h-full flex flex-col">
-<!-- Header -->
-<div class="flex justify-between items-center mb-6 text-white">
-<div>
-<h3 id="galleryTitle" class="text-2xl font-black uppercase mb-1"></h3>
-<p class="text-brand-textGray text-sm">Click any image to view in full size</p>
-</div>
-<button onclick="closeGallery()" class="text-white text-3xl hover:text-brand-yellow transition-colors">
-&times;
-</button>
-</div>
-
-<!-- Image Grid -->
-<div id="galleryGrid" class="grid grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
-<!-- Images will be loaded here dynamically -->
-</div>
+<div id="galleryModal" class="fixed inset-0 bg-black bg-opacity-95 z-50 hidden flex items-start justify-center p-4 overflow-y-auto">
+<div class="max-w-4xl mx-auto relative w-full flex flex-col py-4">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-4 sm:mb-6 text-white sticky top-0 bg-black/80 backdrop-blur-sm py-2 z-10">
+    <div>
+      <h3 id="galleryTitle" class="text-xl sm:text-2xl font-black uppercase mb-1"></h3>
+      <p class="text-brand-textGray text-xs sm:text-sm">Click any image to view in full size</p>
+    </div>
+    <button onclick="closeGallery()" class="text-white text-3xl hover:text-brand-yellow transition-colors ml-4">
+      &times;
+    </button>
+  </div>
+  <!-- Image Grid -->
+  <div id="galleryGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6 justify-items-center">
+    <!-- Images will be loaded here dynamically -->
+  </div>
 </div>
 </div>
 
@@ -643,35 +668,68 @@
 </div>
 
 <!-- PDF Gallery Modal -->
-<div id="pdfGalleryModal" class="fixed inset-0 bg-black bg-opacity-95 z-50 hidden flex items-center justify-center p-4">
-<div class="max-w-4xl mx-auto relative w-full h-full flex flex-col">
-<!-- Header -->
-<div class="flex justify-between items-center mb-6 text-white">
-<div>
-<h3 id="pdfGalleryTitle" class="text-2xl font-black uppercase mb-1"></h3>
-<p class="text-brand-textGray text-sm">Click any document to view full PDF</p>
-</div>
-<button onclick="closePDFGallery()" class="text-white text-3xl hover:text-brand-yellow transition-colors">
-&times;
-</button>
-</div>
-
-<!-- PDF Grid -->
-<div id="pdfGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center">
-<!-- PDFs will be loaded here dynamically -->
-</div>
+<div id="pdfGalleryModal" class="fixed inset-0 bg-black bg-opacity-95 z-50 hidden flex items-start justify-center p-4 overflow-y-auto">
+<div class="max-w-4xl mx-auto relative w-full flex flex-col py-4">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-4 sm:mb-6 text-white sticky top-0 bg-black/80 backdrop-blur-sm py-2 z-10">
+    <div>
+      <h3 id="pdfGalleryTitle" class="text-xl sm:text-2xl font-black uppercase mb-1"></h3>
+      <p class="text-brand-textGray text-xs sm:text-sm">Click any document to view full PDF</p>
+    </div>
+    <button onclick="closePDFGallery()" class="text-white text-3xl hover:text-brand-yellow transition-colors ml-4">
+      &times;
+    </button>
+  </div>
+  <!-- PDF Grid -->
+  <div id="pdfGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 justify-items-center">
+    <!-- PDFs will be loaded here dynamically -->
+  </div>
 </div>
 </div>
 
 <!-- BEGIN: Footer -->
 <footer class="py-12 px-6 border-t border-white/10 text-center">
 <p class="text-xs font-bold uppercase tracking-widest text-gray-500">
-      © 2026 Selvakumar P. Built with AI &amp; Creative Technology.
+      © 2026 Selvakumar P. Shaped by ideas powered by intelligence.
     </p>
 </footer>
 <!-- END: Footer -->
 
 <script>
+// Mobile menu toggle
+function closeMobileMenu() {
+  const menu = document.getElementById('mobileMenu');
+  const overlay = document.getElementById('mobileMenuOverlay');
+  const bar1 = document.getElementById('bar1');
+  const bar2 = document.getElementById('bar2');
+  const bar3 = document.getElementById('bar3');
+  menu.classList.add('translate-x-full');
+  menu.classList.remove('translate-x-0');
+  overlay.classList.add('hidden');
+  bar1.style.transform = '';
+  bar2.style.opacity = '';
+  bar3.style.transform = '';
+}
+
+document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+  const menu = document.getElementById('mobileMenu');
+  const overlay = document.getElementById('mobileMenuOverlay');
+  const bar1 = document.getElementById('bar1');
+  const bar2 = document.getElementById('bar2');
+  const bar3 = document.getElementById('bar3');
+  const isOpen = menu.classList.contains('translate-x-0');
+  if (isOpen) {
+    closeMobileMenu();
+  } else {
+    menu.classList.remove('translate-x-full');
+    menu.classList.add('translate-x-0');
+    overlay.classList.remove('hidden');
+    bar1.style.transform = 'translateY(5.5px) rotate(45deg)';
+    bar2.style.opacity = '0';
+    bar3.style.transform = 'translateY(-5.5px) rotate(-45deg)';
+  }
+});
+
 // Function to toggle custom project type input
 function toggleOtherProjectType() {
     const projectTypeSelect = document.getElementById('project-type');
